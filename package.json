@@ -1,0 +1,19 @@
+{
+  "name": "@eliassama/npm-package-cli",
+  "version": "0.0.0-alpha.1",
+  "description": "A CLI tool used to normalize the creation, management, and distribution of NPM packages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eliassama/npm-package-cli.git"
+  },
+  "author": "eliassama <elias@elias.ink> (https://github.com/eliassama)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eliassama/npm-package-cli/issues"
+  },
+  "homepage": "https://github.com/eliassama/npm-package-cli#readme"
+}
