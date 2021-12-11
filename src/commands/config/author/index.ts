@@ -6,9 +6,9 @@ import * as emailCommand from './email';
 import * as urlCommand from './url';
 
 interface ConfigAuthorOptionsType {
-  name: string;
-  email: string;
-  url: string;
+  name?: string;
+  email?: string;
+  url?: string;
 }
 
 export function makeSubcommand() {
