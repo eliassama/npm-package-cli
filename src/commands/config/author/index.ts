@@ -20,10 +20,7 @@ export function makeSubcommand() {
 
   Program.option('-e, --email <authorEmail>', 'Set the default author email');
 
-  Program.option(
-    '-u, --url <authorUrl>',
-    'Set the default author home page',
-  ).action(commandAction);
+  Program.option('-u, --url <authorUrl>', 'Set the default author home page');
 
   Program.allowExcessArguments(false);
 
