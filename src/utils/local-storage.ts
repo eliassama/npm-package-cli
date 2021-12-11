@@ -1,0 +1,42 @@
+import * as path from 'path';
+import * as fs from 'fs';
+
+const UserHome = process.env.HOME || process.env.USERPROFILE;
+const LocalStorageFile = path.resolve(UserHome || '', '.npm-template.json');
+const DefaultData = {
+  author: {
+    name: '',
+    email: '',
+    url: '',
+  },
+};
+
+export function save(target: string, data: string | boolean) {
+  const ReadData = read();
+  try {
+    const SaveData = new Function(
+      'ReadData',
+      'data',
+      `ReadData.${target} = data ;return ReadData`,
+    )(ReadData, data);
+    fs.writeFileSync(LocalStorageFile, JSON.stringify(SaveData), 'utf-8');
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+export function read(target?: string) {
+  try {
+    const ReadData = JSON.parse(fs.readFileSync(LocalStorageFile, 'utf-8'));
+    if (target) {
+      return new Function('ReadData', `return ReadData.${target}`)(ReadData);
+    }
+    return ReadData;
+  } catch (e) {
+    if (target) {
+      return '';
+    }
+    return DefaultData;
+  }
+}
