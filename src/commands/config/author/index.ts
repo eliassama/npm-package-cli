@@ -26,8 +26,6 @@ export function makeSubcommand() {
 
   Program.action(commandAction);
 
-  Program.outputHelp();
-
   return Program;
 }
 
