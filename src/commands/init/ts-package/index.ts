@@ -1,23 +1,54 @@
 import * as inquirer from 'inquirer';
 import * as chalk from 'chalk';
 import * as path from 'path';
+import * as fs from "fs";
+import * as template from "./template";
+import * as filePath from "./file-path";
+import * as git from "./git";
 
-export function init() {
-  // 收集基础信息
-  questions();
-  // 1. 根据收集的信息和模板创建package.json、README、.gitignore等文件
-  // 2. 复制tsconfig、jestconfig、.prettierrc、.editorconfig、.eslintrc.js等文件并创建__test__目录
-  // 3. 根据收集的信息创建src目录及主文件
-  // 4.git
-  //    初始化git
-  //    建立git分支
-  //    建立存储库
-  //    连接存储库
+export interface BasicAnswersType {
+  name: string
+  description: string
+  srcDir: string
+  outDir: string
+  main: string
+  types: string
+  repository: string
+  initPath: string
 }
 
-async function questions() {
+export function init() {
+  questionToBasicAnswer().then((basicAnswers: BasicAnswersType)=>{
+    template.create(basicAnswers)
+    filePath.create(basicAnswers)
+    git.create(basicAnswers)
+  });
+}
+
+async function questionToBasicAnswer(): Promise<BasicAnswersType> {
   const executePath = process.cwd();
-  const answers = await inquirer.prompt([
+  const { isCreate } = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'isCreate',
+      default: true,
+      message: chalk.bgBlueBright('Is create a new directory?'),
+    }
+  ])
+
+  if (isCreate === false){
+    const executePathFileArray = fs.readdirSync(executePath)
+    if (executePathFileArray.length !== 0){
+      console.log(
+        chalk.bold.red(
+          "Initialization cannot be performed because the current directory is not clean",
+        ),
+      );
+      process.exit()
+    }
+  }
+
+  const basicAnswers : BasicAnswersType = await inquirer.prompt([
     // 项目名称
     {
       type: 'input',
@@ -79,7 +110,7 @@ async function questions() {
       //   return /^[a-z][a-z|0-9|.|\-|_]*.js$/.test(input);
       // },
     },
-    // ts声明文件名
+    // ts 声明文件名
     {
       type: 'input',
       name: 'types',
@@ -102,6 +133,35 @@ async function questions() {
       },
     },
   ]);
-  console.log('结果为:');
-  console.log(answers);
+
+  let initPath = executePath
+
+  if (isCreate){
+    initPath = path.join(executePath, basicAnswers.name)
+  }
+
+  console.log(`About to init to ${initPath}`)
+  console.log(basicAnswers);
+
+  const { isContinue } = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'isContinue',
+      default: true,
+      message: chalk.bgBlueBright('Is this OK?'),
+    },
+  ]);
+
+  if (isContinue === false){
+    console.log(
+      chalk.bold.red(
+        "You canceled the initialization",
+      ),
+    );
+    process.exit()
+  }
+
+  basicAnswers.initPath = initPath
+
+  return basicAnswers
 }
