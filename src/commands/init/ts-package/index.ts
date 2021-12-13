@@ -15,12 +15,15 @@ export interface BasicAnswersType {
   types: string
   repository: string
   initPath: string
+  isCreate: boolean
 }
 
 export function init() {
   questionToBasicAnswer().then((basicAnswers: BasicAnswersType)=>{
-    template.create(basicAnswers)
     filePath.create(basicAnswers)
+    return basicAnswers
+  }).then((basicAnswers: BasicAnswersType)=>{
+    template.create(basicAnswers)
     git.create(basicAnswers)
   });
 }
@@ -50,6 +53,7 @@ async function questionToBasicAnswer(): Promise<BasicAnswersType> {
 
   const basicAnswers : BasicAnswersType = await inquirer.prompt([
     // 项目名称
+    // TODO: 需要提前检查是否有重名的，这一块最好整体拆开一点点处理
     {
       type: 'input',
       name: 'name',
@@ -162,6 +166,7 @@ async function questionToBasicAnswer(): Promise<BasicAnswersType> {
   }
 
   basicAnswers.initPath = initPath
+  basicAnswers.isCreate = isCreate
 
   return basicAnswers
 }
