@@ -54,6 +54,7 @@ async function questionToBasicAnswer(): Promise<BasicAnswersType> {
   const basicAnswers : BasicAnswersType = await inquirer.prompt([
     // 项目名称
     // TODO: 需要提前检查是否有重名的，这一块最好整体拆开一点点处理
+    // FIXME: 对于创建新目录的默认值需要为空
     {
       type: 'input',
       name: 'name',
