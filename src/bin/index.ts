@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import { version } from '../../package.json';
 import * as configCommands from '../commands/config';
 import * as initCommands from '../commands/init';
+import * as publishCommands from '../commands/publish';
 
 const Program = new Command();
 
@@ -13,7 +14,7 @@ Program.addCommand(configCommands.makeSubcommand());
 
 Program.addCommand(initCommands.makeSubcommand());
 
-Program.command('publish', 'Publish version of the NPM package');
+Program.addCommand(publishCommands.makeSubcommand());
 
 // 处理命令行输入的参数
 Program.parse(process.argv);
