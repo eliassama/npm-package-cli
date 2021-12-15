@@ -24,7 +24,9 @@ export function init() {
     return basicAnswers
   }).then((basicAnswers: BasicAnswersType)=>{
     template.create(basicAnswers)
-    git.create(basicAnswers)
+    return basicAnswers
+  }).then(async (basicAnswers: BasicAnswersType)=>{
+    await git.create(basicAnswers)
   });
 }
 
