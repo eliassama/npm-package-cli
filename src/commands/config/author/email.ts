@@ -15,7 +15,7 @@ export function execute(data: string) {
   }
   console.log(
     chalk.bold.red(
-      "Failed to set author's email because the set email is not valid",
+      `Failed to set author's email ${data}, because the set email is not valid`,
     ),
   );
 }

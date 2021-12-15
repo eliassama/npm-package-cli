@@ -1,5 +1,5 @@
 # ${project.name}
-[![standard-readme compliant](https://img.shields.io/badge/${project.name}-v${project.version}-green.svg?style=flat-square)](${project.repository})
+[![standard-readme compliant](https://img.shields.io/badge/${project.name-badge}-v0.0.0--alpha.1-green.svg?style=flat-square)](${project.repository})
 
 ${project.description}
 
