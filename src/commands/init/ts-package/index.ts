@@ -19,6 +19,7 @@ export interface BasicAnswersType {
 }
 
 export function init() {
+  // FIXME: 需要对不同情况下存储库的路径进行处理
   questionToBasicAnswer().then((basicAnswers: BasicAnswersType)=>{
     filePath.create(basicAnswers)
     return basicAnswers
