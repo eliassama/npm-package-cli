@@ -1,25 +1,16 @@
 import * as LocalStorage from '../../../utils/local-storage';
-const chalk = require('chalk');
+import * as output from '../../../utils/output';
+import * as ast from '../../../utils/ast';
 
 export function execute(data: string) {
   if (data[data.length - 1] === "/"){
     data = data.substring(0, data.length - 1)
   }
 
-  if (
-    /^(?:(http|https|ftp):\/\/)?((|[\w-]+\.)+[a-z0-9]+)(?:(\/[^/?#]+)*)?(\?[^#]+)?(#.+)?$/i.test(
-      data,
-    )
-  ) {
+  if (ast.httpUrl(data)) {
     if (LocalStorage.save('author.url', data)) {
-      return console.log(
-        chalk.bold.green(`The author url is successfully set to ${data}`),
-      );
+      return output.prompt(`The author url is successfully set to ${data}`)
     }
   }
-  console.log(
-    chalk.bold.red(
-      `Failed to set author's url ${data}, because the set url is not valid`,
-    ),
-  );
+  output.error(`Failed to set author's url ${data}, because the set url is not valid`)
 }
