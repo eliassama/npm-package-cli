@@ -17,7 +17,9 @@ export interface AnswersType {
   outDir: string
   mainName: string
   tsName: string
-  repository: string
+  httpRepositoryUrl: string
+  sshRepositoryUrl: string
+  repositoryWebUrl: string
 }
 
 export function init() {
@@ -191,17 +193,18 @@ async function pkgBasicFileName(): Promise<{ mainName: string, tsName: string }>
 }
 
 // 获取包 git 库信息
-// FIXME: 需要对不同情况下存储库的路径进行处理
-async function pkgGitInfo(): Promise<{ repository: string }> {
+async function pkgGitInfo(): Promise<{ httpRepositoryUrl: string, sshRepositoryUrl: string, repositoryWebUrl: string }> {
   const result = {
-    repository: "",
+    httpRepositoryUrl: "",
+    sshRepositoryUrl: "",
+    repositoryWebUrl: "",
   }
 
-  const { repository } = await inquirer.prompt([
+  let { repositoryUrl } = await inquirer.prompt([
     // git 存储库地址
     {
-      type: 'repository',
-      name: 'repository',
+      type: 'input',
+      name: 'repositoryUrl',
       message: chalk.bgBlueBright(`git repository:`),
       filter(input: string) {
         return input.trim();
@@ -209,7 +212,25 @@ async function pkgGitInfo(): Promise<{ repository: string }> {
     },
   ]);
 
-  result.repository = repository
+  repositoryUrl = repositoryUrl.toLowerCase()
+
+  if (ast.gitSshUrl(repositoryUrl)) {
+    repositoryUrl = repositoryUrl.replace("git@","")
+    let repositoryTmpArray = repositoryUrl.split(":")
+    let tailStr = repositoryTmpArray.pop()
+    repositoryUrl = `${repositoryTmpArray.join(":")}/${tailStr}`
+  } else if (ast.gitHttpUrl(repositoryUrl)) {
+    repositoryUrl = repositoryUrl.replace(/http(s):\/\//,"")
+  } else {
+    output.warn("You did not enter a valid Git repository connection, please try again")
+    return pkgGitInfo()
+  }
+
+  let [gitDomain = "", gitUserName = "", gitRepoName = ""]: string[] = repositoryUrl.split("/")
+  result.sshRepositoryUrl = `git@${gitDomain}:${gitUserName}/${gitRepoName}`
+  result.httpRepositoryUrl = `https://${gitDomain}/${gitUserName}/${gitRepoName}`
+  result.repositoryWebUrl = `https://${gitDomain}/${gitUserName}/${gitRepoName.replace(".git","")}`
+
   return result
 }
 
@@ -219,7 +240,7 @@ async function questionToBasicAnswer(): Promise<AnswersType> {
   const { description } = await pkgInfo()
   const { srcDir, outDir } = await pkgBasicPath()
   const { mainName, tsName } = await pkgBasicFileName()
-  const { repository } = await pkgGitInfo()
+  const { httpRepositoryUrl, sshRepositoryUrl, repositoryWebUrl } = await pkgGitInfo()
 
   result.pkgPath = pkgPath
   result.pkgName = pkgName
@@ -228,7 +249,9 @@ async function questionToBasicAnswer(): Promise<AnswersType> {
   result.outDir = outDir
   result.mainName = mainName
   result.tsName = tsName
-  result.repository = repository
+  result.httpRepositoryUrl = httpRepositoryUrl
+  result.sshRepositoryUrl = sshRepositoryUrl
+  result.repositoryWebUrl = repositoryWebUrl
 
   output.prompt("Here's what you input or selected")
   output.info("package basic path: ", chalk.cyan(result.pkgPath))
@@ -238,7 +261,9 @@ async function questionToBasicAnswer(): Promise<AnswersType> {
   output.info("package output directory: ",chalk.cyan(result.outDir))
   output.info("package typescript declare file name : ",chalk.cyan(result.tsName))
   output.info("package main file name: ",chalk.cyan(result.mainName))
-  output.info("package git repository url : ",chalk.cyan(result.repository))
+  output.info("package git repository url - ssh: ",chalk.cyan(result.httpRepositoryUrl))
+  output.info("package git repository url - http: ",chalk.cyan(result.sshRepositoryUrl))
+  output.info("package git repository url - webUrl: ",chalk.cyan(result.repositoryWebUrl))
 
   const { isContinue } = await inquirer.prompt([
     {

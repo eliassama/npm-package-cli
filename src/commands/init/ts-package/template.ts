@@ -10,10 +10,10 @@ const CopyFileArray = [
 ]
 
 export function create(basicAnswers: AnswersType) {
-  let localStorage = LocalStorage.read()
-  if (!basicAnswers.repository){
+  // let localStorage = LocalStorage.read()
+  // if (!basicAnswers.repository){
     // basicAnswers.repository = `${localStorage.author.url}/${basicAnswers.name}`
-  }
+  // }
   for (let fileName of CopyFileArray ){
     // let file_content = fs.readFileSync(path.resolve( __dirname, "..", "..", "..", "template", "ts-package", fileName), "utf-8")
     // file_content = file_content.replace(/\${project\.name}/g, basicAnswers.name)

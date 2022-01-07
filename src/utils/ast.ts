@@ -27,3 +27,24 @@ export function httpUrl(url: string): boolean {
   }
   return false;
 }
+
+export function gitSshUrl(url: string): boolean {
+  if(/^git@[^:]+:[^\/]+?\/.*?.git$/.test(url)){
+    return true;
+  }
+  return false;
+}
+
+export function gitHttpUrl(url: string): boolean {
+  if(/^http(s)?:\/\/([^\/]+?\/){2}.*?.git$/.test(url)){
+    return true;
+  }
+  return false;
+}
+
+export function gitUrl(url: string): boolean {
+  if(/^(http(s)?:\/\/([^\/]+?\/){2}|git@[^:]+:[^\/]+?\/).*?.git$/.test(url)){
+    return true;
+  }
+  return false;
+}

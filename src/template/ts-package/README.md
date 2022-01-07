@@ -1,7 +1,7 @@
-# ${project.name}
-[![standard-readme compliant](https://img.shields.io/badge/${project.name-badge}-v0.0.0--alpha.1-green.svg?style=flat-square)](${project.repository})
+# ${pkgName}
+![standard-readme compliant](https://img.shields.io/badge/typescript-v4.5.2-green.svg?style=flat-square)
 
-${project.description}
+${description}
 
 ## Table of Contents
 
@@ -12,7 +12,7 @@ ${project.description}
   - [PNPM](#pnpm)
 - [Usage](#usage)
   - [Introduce](#introduce)
-  - [Argument](#argument)
+  - [Function](#function)
 - [Example](#example)
   - [Javascript](#javascript)
   - [Typescript](#typescript)
@@ -21,29 +21,29 @@ ${project.description}
 ## Install
 ### CNPM
 ```
-cnpm i ${project.name} --save
+cnpm i ${pkgName} --save
 ```
 
 ### NPM 
 ```
-npm i ${project.name} --save
+npm i ${pkgName} --save
 ```
 
 ### YARN
 ```
-yarn add ${project.name}
+yarn add ${pkgName}
 ```
 
 ### PNPM
 ```
-pnpm add ${project.name}
+pnpm add ${pkgName}
 ```
 
 ## Usage
 
 ### Introduce
 
-### Argument
+### Function
 
 
 ## Example
@@ -59,4 +59,4 @@ pnpm add ${project.name}
 ```
 
 ## Maintainers
-[@${author.name}](${project.repository})
+[@${authorName}](${authorUrl})
