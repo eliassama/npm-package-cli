@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+${sshRepositoryUrl}"
+    "url": "git+${httpRepositoryUrl}"
   },
   "author": "${authorName} <${authorEmail}> (${authorUrl})",
   "license": "MIT",
   "bugs": {
-    "url": "${httpRepositoryUrl}/issues"
+    "url": "${repositoryWebUrl}/issues"
   },
-  "homepage": "${httpRepositoryUrl}",
+  "homepage": "${repositoryWebUrl}",
   "devDependencies": {
     "@types/jest": "27.0.3",
     "@typescript-eslint/eslint-plugin": "5.5.0",
