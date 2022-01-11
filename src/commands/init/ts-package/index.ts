@@ -8,6 +8,7 @@ import * as git from "./git";
 import * as exception from "../../../utils/exception";
 import * as output from "../../../utils/output";
 import * as ast from "../../../utils/ast";
+import * as LocalStorage from "../../../utils/local-storage";
 
 export interface AnswersType {
   pkgPath: string
@@ -23,11 +24,17 @@ export interface AnswersType {
 }
 
 export function init() {
-  questionToBasicAnswer().then(async (answers: AnswersType)=>{
-    await filePath.create(answers)
-    await template.create(answers)
-    await git.create(answers)
-  });
+  const localStorage = LocalStorage.read()
+
+  if (localStorage.author.name && localStorage.author.email && localStorage.author.url) {
+    questionToBasicAnswer().then(async (answers: AnswersType)=>{
+      await filePath.create(answers)
+      await template.create(answers)
+      await git.create(answers)
+    });
+  }
+
+  exception.panic(`Please complete the author information by using '${chalk.bold.cyan("npm-template config help author")}' or see 'https://github.com/eliassama/npm-package-cli#commands' for help`)
 }
 
 // 获取包名和路径

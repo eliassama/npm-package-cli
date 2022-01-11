@@ -9,39 +9,31 @@ A CLI tool used to normalize the creation, management, and distribution of NPM p
   - [CNPM](#cnpm)
   - [NPM](#npm)
   - [YARN](#yarn)
-  - [PNPM](#pnpm)
 - [Usage](#usage)
   - [Introduce](#introduce)
-  - [Function](#function)
-- [Example](#example)
-  - [Javascript](#javascript)
-  - [Typescript](#typescript)
+  - [Commands](#commands)
 - [Maintainers](#maintainers)
 
 ## Install
 ### CNPM
 ```
-cnpm i @eliassama/npm-package-cli --save
+cnpm i @eliassama/npm-package-cli -g
 ```
 
 ### NPM
 ```
-npm i @eliassama/npm-package-cli --save
+npm i @eliassama/npm-package-cli -g
 ```
 
 ### YARN
 ```
-yarn add @eliassama/npm-package-cli
-```
-
-### PNPM
-```
-pnpm add @eliassama/npm-package-cli
+yarn global @eliassama/npm-package-cli
 ```
 
 ## Usage
 
 ### Introduce
+You can run the following command to complete the operation. Install the npm package globally before using it: `@eliassama/npm-package-cli`
 
 ### Commands
 #### config \<command\>
