@@ -1,4 +1,4 @@
 .idea
-lib
+${outDir}
 node_modules
 package-lock.json
