@@ -1,6 +1,6 @@
 {
   "name": "@eliassama/npm-package-cli",
-  "version": "0.0.0-alpha.1",
+  "version": "0.0.0",
   "description": "A CLI tool used to normalize the creation, management, and distribution of NPM packages",
   "main": "src/bin/index",
   "scripts": {
