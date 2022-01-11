@@ -4,7 +4,14 @@
   "description": "A CLI tool used to normalize the creation, management, and distribution of NPM packages",
   "main": "src/bin/index",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "format": "prettier --write src/**.ts",
+    "lint": "eslint src/",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "bin": {
     "npm-template": "lib/src/bin/index.js"
