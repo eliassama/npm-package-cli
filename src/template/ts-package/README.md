@@ -1,4 +1,5 @@
 # ${pkgName}
+
 ![standard-readme compliant](https://img.shields.io/badge/typescript-v4.5.2-green.svg?style=flat-square)
 
 ${description}
@@ -19,22 +20,27 @@ ${description}
 - [Maintainers](#maintainers)
 
 ## Install
+
 ### CNPM
+
 ```
 cnpm i ${pkgName} --save
 ```
 
-### NPM 
+### NPM
+
 ```
 npm i ${pkgName} --save
 ```
 
 ### YARN
+
 ```
 yarn add ${pkgName}
 ```
 
 ### PNPM
+
 ```
 pnpm add ${pkgName}
 ```
@@ -45,18 +51,20 @@ pnpm add ${pkgName}
 
 ### Function
 
-
 ## Example
 
 ### Javascript
+
 ```javascript
 
 ```
 
 ### Typescript
+
 ```typescript
 
 ```
 
 ## Maintainers
+
 [@${authorName}](${authorUrl})

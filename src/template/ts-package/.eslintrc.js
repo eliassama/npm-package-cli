@@ -6,6 +6,6 @@ module.exports = {
   plugins: ['jest'],
   extends: ['eliassama/typescript'],
   rules: {
-    "@typescript-eslint/no-explicit-any": ["off"]
+    '@typescript-eslint/no-explicit-any': ['off'],
   },
 };

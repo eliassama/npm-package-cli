@@ -7,6 +7,12 @@ interface ConfigAuthorOptionsType {
   typescript?: boolean;
 }
 
+function commandAction(options: ConfigAuthorOptionsType) {
+  if (options.typescript) {
+    tsPackage.init();
+  }
+}
+
 export function makeSubcommand() {
   const Program = new Command('init').description(
     'Initialize to create an NPM Package template',
@@ -22,10 +28,4 @@ export function makeSubcommand() {
   Program.action(commandAction);
 
   return Program;
-}
-
-function commandAction(options: ConfigAuthorOptionsType) {
-  if (options.typescript) {
-    tsPackage.init();
-  }
 }

@@ -11,6 +11,20 @@ interface ConfigAuthorOptionsType {
   url?: string;
 }
 
+function commandAction(options: ConfigAuthorOptionsType) {
+  if (options.name) {
+    nameCommand.execute(options.name);
+  }
+
+  if (options.email) {
+    emailCommand.execute(options.email);
+  }
+
+  if (options.url) {
+    urlCommand.execute(options.url);
+  }
+}
+
 export function makeSubcommand() {
   const Program = new Command('author').description(
     'Set the default author information',
@@ -27,18 +41,4 @@ export function makeSubcommand() {
   Program.action(commandAction);
 
   return Program;
-}
-
-function commandAction(options: ConfigAuthorOptionsType) {
-  if (options.name) {
-    nameCommand.execute(options.name);
-  }
-
-  if (options.email) {
-    emailCommand.execute(options.email);
-  }
-
-  if (options.url) {
-    urlCommand.execute(options.url);
-  }
 }
