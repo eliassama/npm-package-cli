@@ -1,49 +1,35 @@
 import * as inquirer from 'inquirer';
 import * as chalk from 'chalk';
 import * as path from 'path';
-import * as fs from "fs";
-import * as template from "./template";
-import * as filePath from "./file-path";
-import * as git from "./git";
-import * as exception from "../../../utils/exception";
-import * as output from "../../../utils/output";
-import * as ast from "../../../utils/ast";
-import * as LocalStorage from "../../../utils/local-storage";
+import * as fs from 'fs';
+import * as template from './template';
+import * as filePath from './file-path';
+import * as git from './git';
+import * as exception from '../../../utils/exception';
+import * as output from '../../../utils/output';
+import * as ast from '../../../utils/ast';
+import * as LocalStorage from '../../../utils/local-storage';
 
 export interface AnswersType {
-  pkgPath: string
-  pkgName: string
-  description: string
-  srcDir: string
-  outDir: string
-  mainName: string
-  tsName: string
-  httpRepositoryUrl: string
-  sshRepositoryUrl: string
-  repositoryWebUrl: string
-}
-
-export function init() {
-  const localStorage = LocalStorage.read()
-
-  if (localStorage.author.name && localStorage.author.email && localStorage.author.url) {
-    questionToBasicAnswer().then(async (answers: AnswersType)=>{
-      await filePath.create(answers)
-      await template.create(answers)
-      await git.create(answers)
-    });
-  }
-
-  exception.panic(`Please complete the author information by using '${chalk.bold.cyan("npm-template config help author")}' or see 'https://github.com/eliassama/npm-package-cli#commands' for help`)
+  pkgPath: string;
+  pkgName: string;
+  description: string;
+  srcDir: string;
+  outDir: string;
+  mainName: string;
+  tsName: string;
+  httpRepositoryUrl: string;
+  sshRepositoryUrl: string;
+  repositoryWebUrl: string;
 }
 
 // 获取包名和路径
-async function pkgNameAndPath(): Promise<{ pkgName: string, pkgPath: string }> {
+async function pkgNameAndPath(): Promise<{ pkgName: string; pkgPath: string }> {
   const executePath = process.cwd();
   const result = {
-    pkgName: "",
+    pkgName: '',
     pkgPath: executePath,
-  }
+  };
 
   // 确定是新建目录还是使用当前目录
   const { isCreate } = await inquirer.prompt([
@@ -52,14 +38,16 @@ async function pkgNameAndPath(): Promise<{ pkgName: string, pkgPath: string }> {
       name: 'isCreate',
       default: true,
       message: chalk.bgBlueBright('Is create a new directory?'),
-    }
-  ])
+    },
+  ]);
 
   // 检查是否是干净的目录
-  if (!isCreate){
-    const executePathFileArray = fs.readdirSync(executePath)
-    if (executePathFileArray.length !== 0){
-      exception.panic("Initialization cannot be performed because the current directory is not clean")
+  if (!isCreate) {
+    const executePathFileArray = fs.readdirSync(executePath);
+    if (executePathFileArray.length !== 0) {
+      exception.panic(
+        'Initialization cannot be performed because the current directory is not clean',
+      );
     }
   }
 
@@ -69,30 +57,32 @@ async function pkgNameAndPath(): Promise<{ pkgName: string, pkgPath: string }> {
       type: 'input',
       name: 'packageName',
       message: chalk.bgBlueBright(`package name:`),
-      default: isCreate? null : path.basename(executePath),
+      default: isCreate ? null : path.basename(executePath),
       filter(input: string) {
         return input.trim();
       },
     },
-  ])
+  ]);
 
   // 检查是否有重名目录
-  if (isCreate){
-    result.pkgPath = path.join(executePath, packageName)
+  if (isCreate) {
+    result.pkgPath = path.join(executePath, packageName);
     if (fs.existsSync(result.pkgPath)) {
-      exception.panic(`The specified directory [${result.pkgPath}] already exists`)
+      exception.panic(
+        `The specified directory [${result.pkgPath}] already exists`,
+      );
     }
   }
 
-  result.pkgName = packageName
-  return result
+  result.pkgName = packageName;
+  return result;
 }
 
 // 获取包基础信息
 async function pkgInfo(): Promise<{ description: string }> {
   const result = {
-    description: "",
-  }
+    description: '',
+  };
 
   // 确定包描述
   const { description } = await inquirer.prompt([
@@ -104,18 +94,18 @@ async function pkgInfo(): Promise<{ description: string }> {
         return input.trim();
       },
     },
-  ])
+  ]);
 
-  result.description = description
-  return result
+  result.description = description;
+  return result;
 }
 
 // 获取包基础路径
-async function pkgBasicPath(): Promise<{ srcDir: string, outDir: string }> {
+async function pkgBasicPath(): Promise<{ srcDir: string; outDir: string }> {
   const result = {
-    srcDir: "",
-    outDir: "",
-  }
+    srcDir: '',
+    outDir: '',
+  };
 
   const { srcDir, outDir } = await inquirer.prompt([
     // 核心代码基础目录
@@ -138,25 +128,30 @@ async function pkgBasicPath(): Promise<{ srcDir: string, outDir: string }> {
         return input.trim();
       },
     },
-  ])
+  ]);
 
   if (!ast.diffFileName(srcDir, outDir)) {
-    output.warn("The code path is the same as the compiled output path, please try again")
-    return pkgBasicPath()
+    output.warn(
+      'The code path is the same as the compiled output path, please try again',
+    );
+    return pkgBasicPath();
   }
 
-  result.srcDir = srcDir
-  result.outDir = outDir
+  result.srcDir = srcDir;
+  result.outDir = outDir;
 
-  return result
+  return result;
 }
 
 // 获取包基础文件名
-async function pkgBasicFileName(): Promise<{ mainName: string, tsName: string }> {
+async function pkgBasicFileName(): Promise<{
+  mainName: string;
+  tsName: string;
+}> {
   const result = {
-    mainName: "",
-    tsName: "",
-  }
+    mainName: '',
+    tsName: '',
+  };
 
   // ts 声明文件名
   const { tsName } = await inquirer.prompt([
@@ -169,12 +164,12 @@ async function pkgBasicFileName(): Promise<{ mainName: string, tsName: string }>
         return input.trim();
       },
     },
-  ])
+  ]);
 
-  result.tsName = tsName.replace(/\.ts|\.js/g,"")
-  if (!ast.declareFileName(tsName)){
-    output.warn("Not a valid typescript declaration file")
-    return pkgBasicFileName()
+  result.tsName = tsName.replace(/\.ts|\.js/g, '');
+  if (!ast.declareFileName(tsName)) {
+    output.warn('Not a valid typescript declaration file');
+    return pkgBasicFileName();
   }
 
   const { mainName } = await inquirer.prompt([
@@ -188,24 +183,30 @@ async function pkgBasicFileName(): Promise<{ mainName: string, tsName: string }>
         return input.trim();
       },
     },
-  ])
+  ]);
 
-  result.mainName = mainName.replace(/\.ts|\.js/g,"")
+  result.mainName = mainName.replace(/\.ts|\.js/g, '');
   if (!ast.diffFileName(result.tsName, result.mainName)) {
-    output.warn("The ts declaration file name must be different from the code entry file name")
-    return pkgBasicFileName()
+    output.warn(
+      'The ts declaration file name must be different from the code entry file name',
+    );
+    return pkgBasicFileName();
   }
 
-  return result
+  return result;
 }
 
 // 获取包 git 库信息
-async function pkgGitInfo(): Promise<{ httpRepositoryUrl: string, sshRepositoryUrl: string, repositoryWebUrl: string }> {
+async function pkgGitInfo(): Promise<{
+  httpRepositoryUrl: string;
+  sshRepositoryUrl: string;
+  repositoryWebUrl: string;
+}> {
   const result = {
-    httpRepositoryUrl: "",
-    sshRepositoryUrl: "",
-    repositoryWebUrl: "",
-  }
+    httpRepositoryUrl: '',
+    sshRepositoryUrl: '',
+    repositoryWebUrl: '',
+  };
 
   let { repositoryUrl } = await inquirer.prompt([
     // git 存储库地址
@@ -219,58 +220,77 @@ async function pkgGitInfo(): Promise<{ httpRepositoryUrl: string, sshRepositoryU
     },
   ]);
 
-  repositoryUrl = repositoryUrl.toLowerCase()
+  repositoryUrl = repositoryUrl.toLowerCase();
 
   if (ast.gitSshUrl(repositoryUrl)) {
-    repositoryUrl = repositoryUrl.replace("git@","")
-    let repositoryTmpArray = repositoryUrl.split(":")
-    let tailStr = repositoryTmpArray.pop()
-    repositoryUrl = `${repositoryTmpArray.join(":")}/${tailStr}`
+    repositoryUrl = repositoryUrl.replace('git@', '');
+    const repositoryTmpArray = repositoryUrl.split(':');
+    const tailStr = repositoryTmpArray.pop();
+    repositoryUrl = `${repositoryTmpArray.join(':')}/${tailStr}`;
   } else if (ast.gitHttpUrl(repositoryUrl)) {
-    repositoryUrl = repositoryUrl.replace(/http(s):\/\//,"")
+    repositoryUrl = repositoryUrl.replace(/http(s):\/\//, '');
   } else {
-    output.warn("You did not enter a valid Git repository connection, please try again")
-    return pkgGitInfo()
+    output.warn(
+      'You did not enter a valid Git repository connection, please try again',
+    );
+    return pkgGitInfo();
   }
 
-  let [gitDomain = "", gitUserName = "", gitRepoName = ""]: string[] = repositoryUrl.split("/")
-  result.sshRepositoryUrl = `git@${gitDomain}:${gitUserName}/${gitRepoName}`
-  result.httpRepositoryUrl = `https://${gitDomain}/${gitUserName}/${gitRepoName}`
-  result.repositoryWebUrl = `https://${gitDomain}/${gitUserName}/${gitRepoName.replace(".git","")}`
+  const [gitDomain = '', gitUserName = '', gitRepoName = '']: string[] =
+    repositoryUrl.split('/');
+  result.sshRepositoryUrl = `git@${gitDomain}:${gitUserName}/${gitRepoName}`;
+  result.httpRepositoryUrl = `https://${gitDomain}/${gitUserName}/${gitRepoName}`;
+  result.repositoryWebUrl = `https://${gitDomain}/${gitUserName}/${gitRepoName.replace(
+    '.git',
+    '',
+  )}`;
 
-  return result
+  return result;
 }
 
 async function questionToBasicAnswer(): Promise<AnswersType> {
-  const result: AnswersType = <AnswersType>{}
-  const { pkgName, pkgPath } = await pkgNameAndPath()
-  const { description } = await pkgInfo()
-  const { srcDir, outDir } = await pkgBasicPath()
-  const { mainName, tsName } = await pkgBasicFileName()
-  const { httpRepositoryUrl, sshRepositoryUrl, repositoryWebUrl } = await pkgGitInfo()
+  const result: AnswersType = <AnswersType>{};
+  const { pkgName, pkgPath } = await pkgNameAndPath();
+  const { description } = await pkgInfo();
+  const { srcDir, outDir } = await pkgBasicPath();
+  const { mainName, tsName } = await pkgBasicFileName();
+  const { httpRepositoryUrl, sshRepositoryUrl, repositoryWebUrl } =
+    await pkgGitInfo();
 
-  result.pkgPath = pkgPath
-  result.pkgName = pkgName
-  result.description = description
-  result.srcDir = srcDir
-  result.outDir = outDir
-  result.mainName = mainName
-  result.tsName = tsName
-  result.httpRepositoryUrl = httpRepositoryUrl
-  result.sshRepositoryUrl = sshRepositoryUrl
-  result.repositoryWebUrl = repositoryWebUrl
+  result.pkgPath = pkgPath;
+  result.pkgName = pkgName;
+  result.description = description;
+  result.srcDir = srcDir;
+  result.outDir = outDir;
+  result.mainName = mainName;
+  result.tsName = tsName;
+  result.httpRepositoryUrl = httpRepositoryUrl;
+  result.sshRepositoryUrl = sshRepositoryUrl;
+  result.repositoryWebUrl = repositoryWebUrl;
 
-  output.prompt("Here's what you input or selected")
-  output.info("package basic path: ", chalk.cyan(result.pkgPath))
-  output.info("package name: ",chalk.cyan(result.pkgName))
-  output.info("package description: ",chalk.cyan(result.description))
-  output.info("package code directory: ",chalk.cyan(result.srcDir))
-  output.info("package output directory: ",chalk.cyan(result.outDir))
-  output.info("package typescript declare file name : ",chalk.cyan(result.tsName))
-  output.info("package main file name: ",chalk.cyan(result.mainName))
-  output.info("package git repository url - ssh: ",chalk.cyan(result.httpRepositoryUrl))
-  output.info("package git repository url - http: ",chalk.cyan(result.sshRepositoryUrl))
-  output.info("package git repository url - webUrl: ",chalk.cyan(result.repositoryWebUrl))
+  output.prompt("Here's what you input or selected");
+  output.info('package basic path: ', chalk.cyan(result.pkgPath));
+  output.info('package name: ', chalk.cyan(result.pkgName));
+  output.info('package description: ', chalk.cyan(result.description));
+  output.info('package code directory: ', chalk.cyan(result.srcDir));
+  output.info('package output directory: ', chalk.cyan(result.outDir));
+  output.info(
+    'package typescript declare file name : ',
+    chalk.cyan(result.tsName),
+  );
+  output.info('package main file name: ', chalk.cyan(result.mainName));
+  output.info(
+    'package git repository url - ssh: ',
+    chalk.cyan(result.httpRepositoryUrl),
+  );
+  output.info(
+    'package git repository url - http: ',
+    chalk.cyan(result.sshRepositoryUrl),
+  );
+  output.info(
+    'package git repository url - webUrl: ',
+    chalk.cyan(result.repositoryWebUrl),
+  );
 
   const { isContinue } = await inquirer.prompt([
     {
@@ -281,9 +301,31 @@ async function questionToBasicAnswer(): Promise<AnswersType> {
     },
   ]);
 
-  if (!isContinue){
-    exception.panic("You canceled the initialization")
+  if (!isContinue) {
+    exception.panic('You canceled the initialization');
   }
 
-  return result
+  return result;
+}
+
+export function init() {
+  const localStorage = LocalStorage.read();
+
+  if (
+    localStorage.author.name &&
+    localStorage.author.email &&
+    localStorage.author.url
+  ) {
+    questionToBasicAnswer().then(async (answers: AnswersType) => {
+      await filePath.create(answers);
+      await template.create(answers);
+      await git.create(answers);
+    });
+  }
+
+  exception.panic(
+    `Please complete the author information by using '${chalk.bold.cyan(
+      'npm-template config help author',
+    )}' or see 'https://github.com/eliassama/npm-package-cli#commands' for help`,
+  );
 }

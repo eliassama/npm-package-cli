@@ -1,6 +1,6 @@
-import {versions} from "process";
-import * as fs from "fs";
-import * as path from "path";
+import { versions } from 'process';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /***
  * @description 递归创建目录
@@ -9,7 +9,7 @@ import * as path from "path";
  */
 export async function recursionMkdir(targetPath: string) {
   if (!path.isAbsolute(targetPath)) {
-    targetPath = path.resolve(__dirname, "..", "..", targetPath);
+    targetPath = path.resolve(__dirname, '..', '..', targetPath);
   }
 
   if (parseInt(`${versions.node}`.split('.').join('')) >= 10120) {
