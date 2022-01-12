@@ -321,7 +321,9 @@ export function init() {
     exception.panic(
       `Please complete the author information by using '${chalk.bold.cyan(
         'npm-template config help author',
-      )}' or see '${chalk.bold.cyan("https://github.com/eliassama/npm-package-cli#commands")}' for help`,
+      )}' or see '${chalk.bold.cyan(
+        'https://github.com/eliassama/npm-package-cli#commands',
+      )}' for help`,
     );
   }
 
