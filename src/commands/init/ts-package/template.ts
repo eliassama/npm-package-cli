@@ -62,11 +62,6 @@ export async function create(basicAnswers: AnswersType) {
         new RegExp(`\\\${${param}}`, 'g'),
         ReplaceData[param],
       );
-      console.log('--------');
-      console.log(file_content);
-      console.log(new RegExp(`\\\${${param}}`, 'g'));
-      console.log(ReplaceData[param]);
-      console.log('--------');
     }
 
     await fs.writeFileSync(
