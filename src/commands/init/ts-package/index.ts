@@ -312,20 +312,22 @@ export function init() {
   const localStorage = LocalStorage.read();
 
   if (
-    localStorage.author.name &&
-    localStorage.author.email &&
-    localStorage.author.url
+    !(
+      localStorage.author.name &&
+      localStorage.author.email &&
+      localStorage.author.url
+    )
   ) {
-    questionToBasicAnswer().then(async (answers: AnswersType) => {
-      await filePath.create(answers);
-      await template.create(answers);
-      await git.create(answers);
-    });
+    exception.panic(
+      `Please complete the author information by using '${chalk.bold.cyan(
+        'npm-template config help author',
+      )}' or see '${chalk.bold.cyan("https://github.com/eliassama/npm-package-cli#commands")}' for help`,
+    );
   }
 
-  exception.panic(
-    `Please complete the author information by using '${chalk.bold.cyan(
-      'npm-template config help author',
-    )}' or see 'https://github.com/eliassama/npm-package-cli#commands' for help`,
-  );
+  questionToBasicAnswer().then(async (answers: AnswersType) => {
+    await filePath.create(answers);
+    await template.create(answers);
+    await git.create(answers);
+  });
 }
