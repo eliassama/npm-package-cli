@@ -1,9 +1,8 @@
 import * as LocalStorage from '../../../utils/local-storage';
-import * as ast from '../../../utils/ast';
-import * as output from '../../../utils/output';
+import { output, ast } from '../../../utils';
 
 export function execute(data: string) {
-  if (ast.email(data)) {
+  if (ast.isEmail(data)) {
     if (LocalStorage.save('author.email', data)) {
       return output.prompt(`The author email is successfully set to ${data}`);
     }
