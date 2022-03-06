@@ -11,7 +11,7 @@ export function create(basicAnswers: AnswersType) {
   ];
 
   let promise = Promise.resolve(basicAnswers);
-  for (let idx = 1; idx < gitCommandArray.length; ++idx) {
+  for (let idx = 0; idx < gitCommandArray.length; ++idx) {
     promise = promise.then(async (basicAnswers: AnswersType) => {
       await execSync(gitCommandArray[idx], { cwd: basicAnswers.pkgPath });
       return basicAnswers;
