@@ -72,15 +72,13 @@ export const filepath = {
     data: string | NodeJS.ArrayBufferView,
     options: { overwrite: boolean },
   ) {
-    if (options.overwrite) {
-      fs.writeFileSync(file, data, 'utf-8');
-    } else {
-      fs.access(file, fs.constants.F_OK, (err) => {
-        if (err) {
-          fs.writeFileSync(file, data, 'utf-8');
-        }
-      });
+    if (!options.overwrite) {
+      try {
+        fs.accessSync(file, fs.constants.F_OK);
+        return;
+      } catch (err) {}
     }
+    await fs.writeFileSync(file, data, 'utf-8');
   },
   copyFile: async function (
     targetFile: string,
@@ -98,13 +96,15 @@ export const filepath = {
       );
     } else {
       await this.recursionMkdir(targetFile);
-      fs.readdirSync(sourceFile, 'utf8').forEach((filePath: string) => {
-        this.copyFile(
-          path.join(targetFile, filePath),
-          path.join(sourceFile, filePath),
-          options,
-        );
-      });
+      await Promise.all(
+        fs.readdirSync(sourceFile, 'utf8').map(async (filePath: string) => {
+          await this.copyFile(
+            path.join(targetFile, filePath),
+            path.join(sourceFile, filePath),
+            options,
+          );
+        }),
+      );
     }
   },
 };
