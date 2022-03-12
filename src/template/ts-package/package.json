@@ -2,8 +2,8 @@
   "name": "${pkgName}",
   "version": "${version}",
   "description": "${description}",
-  "main": "${mainName}",
-  "types": "${tsName}",
+  "main": "${outDir}/${mainName}",
+  "types": "${outDir}/${tsName}",
   "scripts": {
     "test": "jest --config jestconfig.json",
     "format": "prettier --write ${srcDir}/",
@@ -14,7 +14,9 @@
     "patch": "npm version patch",
     "minor": "npm version minor",
     "major": "npm version major",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "prepublishOnly": "npm run build",
+    "version": "npm run format && git add -A ${srcDir}"
   },
   "pre-commit": [
     "build"
