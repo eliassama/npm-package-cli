@@ -1,6 +1,5 @@
 import * as LocalStorage from '../../../utils/local-storage';
-import * as output from '../../../utils/output';
-import * as ast from '../../../utils/ast';
+import { output, ast } from '../../../utils';
 
 export function execute(data: string) {
   if (data[data.length - 1] === '/') {

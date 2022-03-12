@@ -1,5 +1,5 @@
 import * as LocalStorage from '../../../utils/local-storage';
-import * as output from '../../../utils/output';
+import { output } from '../../../utils';
 
 export function execute(data: string) {
   if (LocalStorage.save('author.name', data)) {

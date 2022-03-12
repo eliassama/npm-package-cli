@@ -1,15 +1,22 @@
 import { AnswersType } from './index';
 import { execSync } from 'child_process';
 
-export async function create(basicAnswers: AnswersType) {
+export function create(basicAnswers: AnswersType) {
   const gitCommandArray: string[] = [
     'git init',
     'git add .',
-    'git commit -m "first commit"',
-    'git branch dev',
+    `git commit -m "${basicAnswers.firstCommitMessage}"`,
     `git remote add origin ${basicAnswers.sshRepositoryUrl}`,
+    'git branch dev',
   ];
-  for (const command of gitCommandArray) {
-    await execSync(command, { cwd: basicAnswers.pkgPath });
+
+  let promise = Promise.resolve(basicAnswers);
+  for (let idx = 0; idx < gitCommandArray.length; ++idx) {
+    promise = promise.then(async (basicAnswers: AnswersType) => {
+      await execSync(gitCommandArray[idx], { cwd: basicAnswers.pkgPath });
+      return basicAnswers;
+    });
   }
+
+  return promise;
 }
