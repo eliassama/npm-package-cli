@@ -3,7 +3,11 @@ import * as path from 'path';
 import { filepath } from '../../../utils';
 
 export function create(basicAnswers: AnswersType) {
-  const CopyFileArray = ['.editorconfig', '.eslintrc.js', '.prettierrc'];
+  const CopyFileArray = [
+    { templateFileName: 'editorconfig.tpl', fileName: '.editorconfig' },
+    { templateFileName: 'eslintrc.js.tpl', fileName: '.eslintrc.js' },
+    { templateFileName: 'prettierrc.tpl', fileName: '.prettierrc' },
+  ];
 
   const CreateFileArray = [
     path.join(basicAnswers.srcDir, `${basicAnswers.mainName}.ts`),
@@ -33,10 +37,10 @@ export function create(basicAnswers: AnswersType) {
     });
   }
 
-  for (const fileName of CopyFileArray) {
+  for (const fileInfo of CopyFileArray) {
     promise = promise.then(async (basicAnswers: AnswersType) => {
       await filepath.copyFile(
-        path.join(basicAnswers.pkgPath, fileName),
+        path.join(basicAnswers.pkgPath, fileInfo.fileName),
         path.resolve(
           __dirname,
           '..',
@@ -44,7 +48,7 @@ export function create(basicAnswers: AnswersType) {
           '..',
           'template',
           'ts-package',
-          fileName,
+          fileInfo.templateFileName,
         ),
         { overwrite: false },
       );

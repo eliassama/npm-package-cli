@@ -7,8 +7,13 @@ import { filepath } from '../../../utils';
 export function create(basicAnswers: AnswersType) {
   const localStorage = LocalStorage.read();
   const CopyFileArray = [
-    { fileName: '.gitignore', params: ['outDir'] },
     {
+      templateFileName: 'gitignore.tpl',
+      fileName: '.gitignore',
+      params: ['outDir'],
+    },
+    {
+      templateFileName: 'package.json.tpl',
       fileName: 'package.json',
       params: [
         'pkgName',
@@ -27,10 +32,15 @@ export function create(basicAnswers: AnswersType) {
       ],
     },
     {
+      templateFileName: 'README.md.tpl',
       fileName: 'README.md',
       params: ['pkgName', 'description', 'authorName', 'authorUrl'],
     },
-    { fileName: 'tsconfig.json', params: ['outDir'] },
+    {
+      templateFileName: 'tsconfig.json.tpl',
+      fileName: 'tsconfig.json',
+      params: ['outDir'],
+    },
   ];
   const ReplaceData: { [index: string]: string } = {
     pkgName: basicAnswers.pkgName,
@@ -59,7 +69,7 @@ export function create(basicAnswers: AnswersType) {
           '..',
           'template',
           'ts-package',
-          fileInfo.fileName,
+          fileInfo.templateFileName,
         ),
         'utf-8',
       );
